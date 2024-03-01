@@ -1,6 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, FC } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,76 +10,47 @@ const videoPaths = [
   "/horizontal_test_scroll.mp4",
 ];
 
-const VideoScroller = () => {
+const VideoScroller: FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    if (!videoRef.current) return;
     const video = videoRef.current;
 
-    // Handler to set up ScrollTrigger once video metadata is loaded
-    const setupScrollTrigger = () => {
-
+    const setupScrollTrigger = (): (() => void) => {
       const scrollTrigger = ScrollTrigger.create({
         start: 0,
-        end: () => "+=" + document.documentElement.offsetHeight * 4, // Dynamically setting the end based on video duration
+        end: () => `+=${document.documentElement.offsetHeight * 4}`,
         scrub: true,
         onLeaveBack: (self) => self.scroll(ScrollTrigger.maxScroll(window)),
         onEnterBack: (self) => self.scroll(0),
         onUpdate: (self) => {
-          const scrollPosition = self.progress;
-          if (video === null) {
-            return;
-          }
-          // Adjust video currentTime based on scroll position and video duration
-          const videoTime = video.duration * scrollPosition;
-          video.currentTime = videoTime;
+          if (!video) return;
+          video.currentTime = video.duration * self.progress;
         },
       });
 
-      return () => {
-        if (scrollTrigger) {
-          scrollTrigger.kill();
-        }
-      };
+      return () => scrollTrigger && scrollTrigger.kill();
     };
 
-    if (video === null) {
-      return;
-    }
+    const onLoadedMetadata = setupScrollTrigger();
+    video.addEventListener("loadedmetadata", onLoadedMetadata);
 
-    if (video.readyState >= 1) {
-      // If video metadata is already loaded at the time of effect execution
-      setupScrollTrigger();
-    } else {
-      // Wait for metadata to load
-      video.addEventListener("loadedmetadata", setupScrollTrigger);
-    }
-
-    return () => {
-      video.removeEventListener("loadedmetadata", setupScrollTrigger);
-    };
+    return () => video.removeEventListener("loadedmetadata", onLoadedMetadata);
   }, []);
 
   return (
-    <div style={{ height: "500vh" }}>
-      {/* Set container height to 500vh */}
+    <div className="h-[500vh]"> {/* Adjusted inline style to Tailwind CSS */}
       <video
         ref={videoRef}
         src={videoPaths[0]}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-        }}
+        className="fixed top-0 left-0 w-full h-full object-cover" // Adjusted inline style to Tailwind CSS
         muted
         loop
       />
-      {videoRef.current === null && (
+      {!videoRef.current && (
         <>
-          <img src="/vite.svg" />
+          <img src="/vite.svg" alt="Loading" />
           Loading...
         </>
       )}
