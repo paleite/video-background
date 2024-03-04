@@ -1,12 +1,11 @@
-import React, {
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
   FunctionComponent,
   PropsWithChildren,
   useEffect,
-  useRef,
-  useState,
+  useRef
 } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
  * IMPORTANT: This component relies on having properly encoded videos and having
@@ -53,7 +52,6 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  // const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -102,7 +100,6 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({
           className="fixed h-screen w-screen object-cover"
           muted
           playsInline
-          // webkit-playsinline={true}
           preload="auto"
         >
           <source src={videoPaths[0]} type="video/mp4" />
