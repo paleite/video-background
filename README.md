@@ -1,3 +1,11 @@
+Videos must be encoded with this, otherwise it gets choppy:
+
+```sh
+ffmpeg -i public/horizontal_test_scroll.mp4 -vf scale=376:668 -movflags faststart -vcodec libx264 -crf 20 -g 1 -pix_fmt yuv420p public/horizontal_test_scroll-re.mp4
+ffmpeg -i public/vertical_test_scroll_2.mp4 -vf scale=376:668 -movflags faststart -vcodec libx264 -crf 20 -g 1 -pix_fmt yuv420p public/vertical_test_scroll_2-re.mp4
+ffmpeg -i public/Vertical_test_scroll.mp4 -vf scale=376:668 -movflags faststart -vcodec libx264 -crf 20 -g 1 -pix_fmt yuv420p public/Vertical_test_scroll-re.mp4
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

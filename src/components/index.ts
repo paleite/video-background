@@ -1,1 +1,1 @@
-export * from "./video-scroller";
+export * from "./video-background";
