@@ -81,6 +81,7 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({ children }) => 
         <video
           data-testid="video"
           ref={videoRef}
+          autoPlay={!!isBatterySaverMode}
           className="fixed h-screen w-screen object-cover"
           muted
           playsInline
