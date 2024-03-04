@@ -1,10 +1,16 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { FunctionComponent, PropsWithChildren, useEffect, useRef, useState } from "react";
+import {
+  FunctionComponent,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const screenHeightsToAnimateOver = 3;
+const screenHeightsToAnimateOver = 4;
 
 const getScreenHeights = (screenHeightsToAnimateOver: number) => ({
   percentage: `${Math.max((screenHeightsToAnimateOver - 1) * 100, 0)}%`,
@@ -19,6 +25,14 @@ const videoPaths = [
   "/horizontal_test_scroll-re.mp4",
 ];
 
+const posterPaths = [
+  "/Vertical_test_scroll-poster.jpg",
+  "/vertical_test_scroll_2-poster.jpg",
+  "/horizontal_test_scroll-poster.jpg",
+];
+
+const index = 0;
+
 const prefetchVideo = async (path: string): Promise<string> => {
   try {
     const response = await fetch(path);
@@ -30,28 +44,39 @@ const prefetchVideo = async (path: string): Promise<string> => {
   }
 };
 
-const VideoBackground: FunctionComponent<PropsWithChildren> = ({ children }) => {
+const VideoBackground: FunctionComponent<PropsWithChildren> = ({
+  children,
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoSrc, setVideoSrc] = useState<string>("");
-  const [isBatterySaverMode, setIsBatterySaverMode] = useState<boolean | null>(null);
+  const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
+  const [autoPlayable, setAutoPlayable] = useState<boolean | undefined>(
+    undefined,
+  );
+
+  const isBatterySaver = autoPlayable !== true;
 
   useEffect(() => {
-    prefetchVideo(videoPaths[0])
+    prefetchVideo(videoPaths[index])
       .then((blobUrl) => setVideoSrc(blobUrl))
       .catch((error) => console.error("Error setting video source:", error));
 
     const video = videoRef.current;
-    if (!video) return;
+    if (!video) {
+      return;
+    }
 
     // This is necessary for iOS Safari to show the video on interaction.
     (async () => {
       try {
         await video.play();
         video.pause();
-        setIsBatterySaverMode(false);
+        setAutoPlayable(false);
       } catch (error) {
-        console.error("Video play failed. battery saver mode?", error);
-        setIsBatterySaverMode(true);
+        console.warn("Video playback failed", error);
+
+        // Although technically speaking it's incorrect to infer battery saver
+        // mode from the error, it's a good enough heuristic for our purposes.
+        setAutoPlayable(true);
       }
     })();
 
@@ -77,16 +102,29 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({ children }) => 
 
   return (
     <>
-      <div className="overflow-hidden" style={{ height: heights.viewport }} data-testid="video-container">
+      <div
+        className="overflow-hidden"
+        style={{ height: heights.viewport }}
+        data-testid="video-container"
+        >
+        {/* {videoSrc === undefined && (
+          <div
+            className="fixed flex h-screen w-screen items-center justify-center"
+            data-testid="loading"
+          >
+            Loading...
+          </div>
+        )} */}
         <video
           data-testid="video"
           ref={videoRef}
-          autoPlay={!!isBatterySaverMode}
-          className="fixed h-screen w-screen object-cover"
+          autoPlay={!isBatterySaver}
+          className="fixed h-screen w-screen bg-black object-cover"
           muted
           playsInline
           preload="auto"
-        >
+          poster={posterPaths[index]}
+          >
           {videoSrc && <source src={videoSrc} type="video/mp4" />}
         </video>
       </div>
