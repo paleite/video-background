@@ -8,6 +8,21 @@ import React, {
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+/**
+ * IMPORTANT: This component relies on having properly encoded videos and having
+ * battery saver mode turned off.
+ *
+ * To properly encode videos for the web, use the following settings:
+ * ```sh
+ * ffmpeg -i public/horizontal_test_scroll.mp4 -vf scale=376:668 -movflags faststart -vcodec libx264 -crf 20 -g 1 -pix_fmt yuv420p public/horizontal_test_scroll-re.mp4
+ * ffmpeg -i public/vertical_test_scroll_2.mp4 -vf scale=376:668 -movflags faststart -vcodec libx264 -crf 20 -g 1 -pix_fmt yuv420p public/vertical_test_scroll_2-re.mp4
+ * ffmpeg -i public/Vertical_test_scroll.mp4 -vf scale=376:668 -movflags faststart -vcodec libx264 -crf 20 -g 1 -pix_fmt yuv420p public/Vertical_test_scroll-re.mp4
+ * ```
+ *
+ * If battery saver mode is on, the video won't play on interaction in iOS
+ * Safari because Safari blocks autoplaying videos, which is required for the
+ * GSAP ScrollTrigger to work properly.
+ */
 const screenHeightsToAnimateOver = 3;
 
 const getScreenHeights = (screenHeightsToAnimateOver: number) => {
@@ -18,15 +33,6 @@ const getScreenHeights = (screenHeightsToAnimateOver: number) => {
 };
 
 const heights = getScreenHeights(screenHeightsToAnimateOver);
-
-/**
- * NOTE: This demo needs to be run with battery saver mode turned off, as
- * automatic playback of the video is disabled in that mode.
- *
- * The video ends at 100% + 200%, so its container is set to 300vh.
- * See the elements with the data-testid="video-container" and
- * data-testid="video" attributes in the JSX below.
- */
 
 const videoPaths = [
   // These videos are re-encodes (hence the -re suffix in the filename), which work better with the GSAP ScrollTrigger in browsers.
@@ -47,17 +53,27 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    // Attempt to play video and catch any errors. This is necessary for iOS
+    // Safari to show the video on interaction.
+    (async () => {
+      try {
+        await video.play();
+      } catch (error) {
+        console.error("Video play failed", error);
+      }
+    })();
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: video,
         start: "top top",
-        end: "bottom+="+heights.percentage+" bottom",
+        end: "bottom+=" + heights.percentage + " bottom",
         scrub: true,
         markers: import.meta.env.PROD !== true,
       },
@@ -73,29 +89,10 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({
     };
   }, []);
 
-  // Function to handle manual play trigger for iOS Safari. Without this, the video won't play on interaction.
-  const handleVideoInteraction = () => {
-    if (!isPlaying) {
-      const video = videoRef.current;
-      if (video) {
-        video
-          .play()
-          .then(() => {
-            setIsPlaying(true);
-            console.log("Paused video");
-            video.pause();
-          })
-          .catch((error) =>
-            console.error("Video play on interaction failed:", error),
-          );
-      }
-    }
-  };
-
   return (
     <>
       <div
-        onClick={handleVideoInteraction}
+        className="overflow-hidden"
         style={{ height: heights.viewport }}
         data-testid="video-container"
       >
@@ -105,6 +102,7 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({
           className="fixed h-screen w-screen object-cover"
           muted
           playsInline
+          // webkit-playsinline={true}
           preload="auto"
         >
           <source src={videoPaths[0]} type="video/mp4" />

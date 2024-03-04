@@ -5,7 +5,7 @@
   "dictionaries": [],
   "words": [
     "gsap",
-    "data-testid"
+    "testid"
   ],
   "ignoreWords": [],
   "import": []
