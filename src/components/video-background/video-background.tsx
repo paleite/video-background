@@ -88,7 +88,7 @@ const VideoBackground: FunctionComponent<PropsWithChildren<{videoUrl: string; po
     return () => {
       tl.kill();
     };
-  }, []);
+  }, [videoUrl]);
 
   return (
     <>
