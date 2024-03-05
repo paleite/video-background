@@ -1,24 +1,18 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  FunctionComponent,
-  PropsWithChildren,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import type { FunctionComponent, PropsWithChildren } from "react";
+import { useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const screenHeightsToAnimateOver = 4;
 
-const getScreenHeights = (screenHeightsToAnimateOver: number) => ({
-  percentage: `${Math.max((screenHeightsToAnimateOver - 1) * 100, 0)}%`,
-  viewport: `${Math.max(screenHeightsToAnimateOver * 100, 0)}vh`,
+const getScreenHeights = (screenHeights: number) => ({
+  percentage: `${Math.max((screenHeights - 1) * 100, 0)}%`,
+  viewport: `${Math.max(screenHeights * 100, 0)}vh`,
 });
 
 const heights = getScreenHeights(screenHeightsToAnimateOver);
-
 
 const prefetchVideo = async (path: string): Promise<string> => {
   try {
@@ -31,12 +25,9 @@ const prefetchVideo = async (path: string): Promise<string> => {
   }
 };
 
-const VideoBackground: FunctionComponent<PropsWithChildren<{videoUrl: string; posterUrl: string;}>> = ({
-  children,
-  videoUrl,
-  posterUrl,
-
-}) => {
+const VideoBackground: FunctionComponent<
+  PropsWithChildren<{ videoUrl: string; posterUrl: string }>
+> = ({ children, videoUrl, posterUrl }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
   const [autoPlayable, setAutoPlayable] = useState<boolean | undefined>(
@@ -46,13 +37,18 @@ const VideoBackground: FunctionComponent<PropsWithChildren<{videoUrl: string; po
   const isBatterySaver = autoPlayable !== true;
 
   useEffect(() => {
-    prefetchVideo(videoUrl)
-      .then((blobUrl) => setVideoSrc(blobUrl))
-      .catch((error) => console.error("Error setting video source:", error));
+    (async () => {
+      try {
+        const blobUrl = await prefetchVideo(videoUrl);
+        setVideoSrc(blobUrl);
+      } catch (error) {
+        console.error("Error setting video source:", error);
+      }
+    })();
 
     const video = videoRef.current;
     if (!video) {
-      return;
+      return () => {};
     }
 
     // This is necessary for iOS Safari to show the video on interaction.
@@ -76,13 +72,13 @@ const VideoBackground: FunctionComponent<PropsWithChildren<{videoUrl: string; po
         start: "top top",
         end: `bottom+=${heights.percentage} bottom`,
         scrub: true,
-        markers: import.meta.env.PROD !== true,
+        markers: !import.meta.env.PROD,
       },
     });
 
-    video.onloadedmetadata = () => {
+    video.addEventListener("loadedmetadata", () => {
       tl.to(video, { currentTime: video.duration });
-    };
+    });
 
     // Cleanup function to kill the GSAP timeline on component unmount
     return () => {
@@ -94,9 +90,9 @@ const VideoBackground: FunctionComponent<PropsWithChildren<{videoUrl: string; po
     <>
       <div
         className="overflow-hidden"
-        style={{ height: heights.viewport }}
         data-testid="video-container"
-        >
+        style={{ height: heights.viewport }}
+      >
         {/* {videoSrc === undefined && (
           <div
             className="fixed flex h-screen w-screen items-center justify-center"
@@ -106,16 +102,16 @@ const VideoBackground: FunctionComponent<PropsWithChildren<{videoUrl: string; po
           </div>
         )} */}
         <video
-          data-testid="video"
           ref={videoRef}
-          autoPlay={!isBatterySaver}
-          className="fixed h-screen w-screen bg-black object-cover"
           muted
           playsInline
-          preload="auto"
+          autoPlay={!isBatterySaver}
+          className="fixed h-screen w-screen bg-black object-cover"
+          data-testid="video"
           poster={posterUrl}
-          >
-          {videoSrc && <source src={videoSrc} type="video/mp4" />}
+          preload="auto"
+        >
+          {videoSrc !== undefined && <source src={videoSrc} type="video/mp4" />}
         </video>
       </div>
       <div className="relative">{children}</div>

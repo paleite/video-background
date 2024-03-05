@@ -1,31 +1,30 @@
 import { VideoBackground } from "./components";
-import { default as belowVideo } from "/below-video.png";
 
 const videoPaths = [
   "/Vertical_test_scroll-re.mp4",
   "/vertical_test_scroll_2-re.mp4",
   "/horizontal_test_scroll-re.mp4",
-].map(path => `${import.meta.env.BASE_URL}${path}`);
+].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const posterPaths = [
   "/Vertical_test_scroll-poster.jpg",
   "/vertical_test_scroll_2-poster.jpg",
   "/horizontal_test_scroll-poster.jpg",
-].map(path => `${import.meta.env.BASE_URL}${path}`);
+].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
-function useQueryParam(key: string) {
+const useQueryParam = (key: string) => {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(key);
-}
+};
 
-const App = () => {
+const App: React.FunctionComponent = () => {
   const value: number =
-    parseInt(useQueryParam("video") ?? "0", 10) % videoPaths.length;
+    parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
 
   const videoPath = videoPaths[value];
   const posterPath = posterPaths[value];
 
-  if (!videoPath) {
+  if (videoPath === undefined) {
     return (
       <div>
         <h1>Video not found</h1>
@@ -33,7 +32,7 @@ const App = () => {
     );
   }
 
-  if (!posterPath) {
+  if (posterPath === undefined) {
     return (
       <div>
         <h1>Poster not found</h1>
@@ -42,8 +41,12 @@ const App = () => {
   }
 
   return (
-    <VideoBackground videoUrl={videoPath} posterUrl={posterPath}>
-      <img src={belowVideo} className="w-full" alt="BLK DNM Webshop" />
+    <VideoBackground posterUrl={posterPath} videoUrl={videoPath}>
+      <img
+        alt="BLK DNM Webshop"
+        className="w-full"
+        src={`${import.meta.env.BASE_URL}below-video.png`}
+      />
     </VideoBackground>
   );
 };
