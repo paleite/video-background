@@ -14,11 +14,24 @@ const getScreenHeights = (screenHeights: number) => ({
 
 const heights = getScreenHeights(screenHeightsToAnimateOver);
 
+const fetchVideo = async (path: string) => {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw new Error("Network error");
+  }
+
+  return response;
+};
+
+const videoToBlobURL = async (response: Response) => {
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+};
+
 const prefetchVideo = async (path: string): Promise<string> => {
   try {
-    const response = await fetch(path);
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
+    const response = await fetchVideo(path);
+    return await videoToBlobURL(response);
   } catch (error) {
     console.error("Failed to prefetch video", error);
     throw error;
