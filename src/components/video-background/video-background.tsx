@@ -3,6 +3,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { FunctionComponent, PropsWithChildren } from "react";
 import { useEffect, useRef, useState } from "react";
 
+type VideoBackgroundProps = {
+  videoUrl: string;
+  posterUrl: string;
+};
+
 gsap.registerPlugin(ScrollTrigger);
 
 const screenHeightsToAnimateOver = 4;
@@ -38,8 +43,29 @@ const prefetchVideo = async (path: string): Promise<string> => {
   }
 };
 
+const setupScrollAnimation = (video: HTMLVideoElement) => {
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: video,
+      start: "top top",
+      end: `bottom+=${heights.percentage} bottom`,
+      scrub: true,
+      markers: !import.meta.env.PROD,
+    },
+  });
+
+  video.addEventListener("loadedmetadata", () => {
+    tl.to(video, { currentTime: video.duration });
+  });
+
+  // Cleanup function to kill the GSAP timeline on component unmount
+  return () => {
+    tl.kill();
+  };
+};
+
 const VideoBackground: FunctionComponent<
-  PropsWithChildren<{ videoUrl: string; posterUrl: string }>
+  PropsWithChildren<VideoBackgroundProps>
 > = ({ children, videoUrl, posterUrl }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
@@ -72,7 +98,7 @@ const VideoBackground: FunctionComponent<
     }
 
     // This is necessary for iOS Safari to show the video on interaction.
-    (async function iOSInit() {
+    (async function checkAutoPlayability() {
       try {
         await video.play();
         video.pause();
@@ -86,33 +112,15 @@ const VideoBackground: FunctionComponent<
       }
     })();
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: video,
-        start: "top top",
-        end: `bottom+=${heights.percentage} bottom`,
-        scrub: true,
-        markers: !import.meta.env.PROD,
-      },
-    });
-
-    video.addEventListener("loadedmetadata", () => {
-      tl.to(video, { currentTime: video.duration });
-    });
-
-    // Cleanup function to kill the GSAP timeline on component unmount
-    return () => {
-      tl.kill();
-    };
+    return setupScrollAnimation(video);
   }, [videoUrl]);
 
   return (
     <>
       <div
-        className="overflow-hidden"
+        aria-busy={videoSrc === undefined}
         data-testid="video-background-container"
         style={{ height: heights.viewport }}
-        aria-busy={videoSrc === undefined}
       >
         {/* {videoSrc === undefined && (
           <div
@@ -127,11 +135,11 @@ const VideoBackground: FunctionComponent<
           muted
           playsInline
           autoPlay={isBatterySaver}
-          className="fixed h-screen w-screen bg-black object-cover"
+          className="fixed h-screen w-screen object-cover"
           data-testid="video-background-video"
           poster={posterUrl}
           preload="auto"
-          role="img" // Providing a role for better semantic meaning
+          role="img"
         >
           {videoSrc !== undefined && <source src={videoSrc} type="video/mp4" />}
         </video>

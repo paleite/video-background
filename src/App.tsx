@@ -42,9 +42,9 @@ const App: React.FunctionComponent = () => {
 
   return (
     <VideoBackground
+      aria-label="BLK DNM Product Showcase video"
       posterUrl={posterPath}
       videoUrl={videoPath}
-      aria-label="BLK DNM Product Showcase video"
     >
       <img
         alt="BLK DNM Webshop"
