@@ -49,6 +49,7 @@ const VideoBackground: FunctionComponent<
         // simply degrading the user experience a bit.
 
         console.warn("Falling back to on-the-fly loading", error);
+        setVideoSrc(videoUrl);
       }
     })();
 
@@ -96,8 +97,9 @@ const VideoBackground: FunctionComponent<
     <>
       <div
         className="overflow-hidden"
-        data-testid="video-container"
+        data-testid="video-background-container"
         style={{ height: heights.viewport }}
+        aria-busy={videoSrc === undefined}
       >
         {/* {videoSrc === undefined && (
           <div
@@ -113,9 +115,10 @@ const VideoBackground: FunctionComponent<
           playsInline
           autoPlay={isBatterySaver}
           className="fixed h-screen w-screen bg-black object-cover"
-          data-testid="video"
+          data-testid="video-background-video"
           poster={posterUrl}
           preload="auto"
+          role="img" // Providing a role for better semantic meaning
         >
           {videoSrc !== undefined && <source src={videoSrc} type="video/mp4" />}
         </video>
