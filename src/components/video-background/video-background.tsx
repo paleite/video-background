@@ -34,15 +34,21 @@ const VideoBackground: FunctionComponent<
     undefined,
   );
 
-  const isBatterySaver = autoPlayable !== true;
+  // Although technically speaking it's incorrect to infer battery saver mode
+  // from auto-playability, it's a good enough heuristic for our purposes.
+  const isBatterySaver = autoPlayable === false;
 
   useEffect(() => {
-    (async () => {
+    (async function setPrefetchedVideoSource() {
       try {
         const blobUrl = await prefetchVideo(videoUrl);
         setVideoSrc(blobUrl);
       } catch (error) {
-        console.error("Error setting video source:", error);
+        // When this error occurs, the video will not be pre-fetched, and will
+        // be loaded on the fly, which means we can still achieve the effect by
+        // simply degrading the user experience a bit.
+
+        console.warn("Falling back to on-the-fly loading", error);
       }
     })();
 
@@ -52,17 +58,17 @@ const VideoBackground: FunctionComponent<
     }
 
     // This is necessary for iOS Safari to show the video on interaction.
-    (async () => {
+    (async function iOSInit() {
       try {
         await video.play();
         video.pause();
-        setAutoPlayable(false);
+
+        setAutoPlayable(true);
       } catch (error) {
+        // iOS Safari will fail when in battery saver mode.
         console.warn("Video playback failed", error);
 
-        // Although technically speaking it's incorrect to infer battery saver
-        // mode from the error, it's a good enough heuristic for our purposes.
-        setAutoPlayable(true);
+        setAutoPlayable(false);
       }
     })();
 
@@ -105,7 +111,7 @@ const VideoBackground: FunctionComponent<
           ref={videoRef}
           muted
           playsInline
-          autoPlay={!isBatterySaver}
+          autoPlay={isBatterySaver}
           className="fixed h-screen w-screen bg-black object-cover"
           data-testid="video"
           poster={posterUrl}
