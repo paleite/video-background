@@ -19,19 +19,6 @@ const getScreenHeights = (screenHeightsToAnimateOver: number) => ({
 
 const heights = getScreenHeights(screenHeightsToAnimateOver);
 
-const videoPaths = [
-  "/Vertical_test_scroll-re.mp4",
-  "/vertical_test_scroll_2-re.mp4",
-  "/horizontal_test_scroll-re.mp4",
-];
-
-const posterPaths = [
-  "/Vertical_test_scroll-poster.jpg",
-  "/vertical_test_scroll_2-poster.jpg",
-  "/horizontal_test_scroll-poster.jpg",
-];
-
-const index = 0;
 
 const prefetchVideo = async (path: string): Promise<string> => {
   try {
@@ -44,8 +31,11 @@ const prefetchVideo = async (path: string): Promise<string> => {
   }
 };
 
-const VideoBackground: FunctionComponent<PropsWithChildren> = ({
+const VideoBackground: FunctionComponent<PropsWithChildren<{videoUrl: string; posterUrl: string;}>> = ({
   children,
+  videoUrl,
+  posterUrl,
+
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
@@ -56,7 +46,7 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({
   const isBatterySaver = autoPlayable !== true;
 
   useEffect(() => {
-    prefetchVideo(videoPaths[index])
+    prefetchVideo(videoUrl)
       .then((blobUrl) => setVideoSrc(blobUrl))
       .catch((error) => console.error("Error setting video source:", error));
 
@@ -123,7 +113,7 @@ const VideoBackground: FunctionComponent<PropsWithChildren> = ({
           muted
           playsInline
           preload="auto"
-          poster={posterPaths[index]}
+          poster={posterUrl}
           >
           {videoSrc && <source src={videoSrc} type="video/mp4" />}
         </video>
