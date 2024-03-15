@@ -24,16 +24,18 @@ const useQueryParam = (key: string) => {
 const App: React.FunctionComponent = () => {
   const videoIndex: number =
     parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
-  const durationParameter: number = parseFloat(
-    useQueryParam("duration") ?? "0",
-  );
+  const durationParameter = useQueryParam("duration");
+  const durationParameterFloat: number | null =
+    durationParameter !== null ? parseFloat(durationParameter) : null;
 
   const videoPath = videoPaths[videoIndex];
   const posterPath = posterPaths[videoIndex];
   const duration =
-    Number.isNaN(durationParameter) || durationParameter <= 0
+    durationParameterFloat === null ||
+    Number.isNaN(durationParameterFloat) ||
+    durationParameterFloat <= 0
       ? durations[videoIndex]
-      : durationParameter;
+      : durationParameterFloat;
 
   if (videoPath === undefined) {
     return (
