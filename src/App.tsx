@@ -31,7 +31,7 @@ const App: React.FunctionComponent = () => {
   const videoPath = videoPaths[videoIndex];
   const posterPath = posterPaths[videoIndex];
   const duration =
-    Number.isNaN(durationParameter) || durationParameter < 0
+    Number.isNaN(durationParameter) || durationParameter <= 0
       ? durations[videoIndex]
       : durationParameter;
 
