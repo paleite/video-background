@@ -10,7 +10,7 @@ type VideoBackgroundProps = {
 
 gsap.registerPlugin(ScrollTrigger);
 
-const screenHeightsToAnimateOver = 4;
+const screenHeightsToAnimateOver = 2;
 
 const getScreenHeights = (screenHeights: number) => ({
   percentage: `${Math.max((screenHeights - 1) * 100, 0)}%`,
