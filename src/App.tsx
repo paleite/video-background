@@ -14,7 +14,7 @@ const posterPaths = [
   "/Sequence-02-poster.jpg",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
-const durations = [4, 4, 4, 3];
+const durations = [4, 4, 4, 3.5];
 
 const useQueryParam = (key: string) => {
   const urlParams = new URLSearchParams(window.location.search);
