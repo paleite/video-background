@@ -6,18 +6,15 @@ import { useEffect, useRef, useState } from "react";
 type VideoBackgroundProps = {
   videoUrl: string;
   posterUrl: string;
+  duration: number;
 };
 
 gsap.registerPlugin(ScrollTrigger);
-
-const screenHeightsToAnimateOver = 2;
 
 const getScreenHeights = (screenHeights: number) => ({
   percentage: `${Math.max((screenHeights - 1) * 100, 0)}%`,
   viewport: `${Math.max(screenHeights * 100, 0)}vh`,
 });
-
-const heights = getScreenHeights(screenHeightsToAnimateOver);
 
 const fetchVideo = async (path: string) => {
   const response = await fetch(path);
@@ -43,7 +40,9 @@ const prefetchVideo = async (path: string): Promise<string> => {
   }
 };
 
-const setupScrollAnimation = (video: HTMLVideoElement) => {
+const setupScrollAnimation = (video: HTMLVideoElement, screenHeightsToAnimateOver: number) => {
+  const heights = getScreenHeights(screenHeightsToAnimateOver); // Calculate heights based on prop
+
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: video,
@@ -66,7 +65,7 @@ const setupScrollAnimation = (video: HTMLVideoElement) => {
 
 const VideoBackground: FunctionComponent<
   PropsWithChildren<VideoBackgroundProps>
-> = ({ children, videoUrl, posterUrl }) => {
+> = ({ children, videoUrl, posterUrl, duration: screenHeightsToAnimateOver }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
   const [autoPlayable, setAutoPlayable] = useState<boolean | undefined>(
@@ -112,15 +111,15 @@ const VideoBackground: FunctionComponent<
       }
     })();
 
-    return setupScrollAnimation(video);
-  }, [videoUrl]);
+    return setupScrollAnimation(video, screenHeightsToAnimateOver); // Pass prop to setupScrollAnimation
+  }, [videoUrl, screenHeightsToAnimateOver]); // Add prop to dependency array
 
   return (
     <>
       <div
         aria-busy={videoSrc === undefined}
         data-testid="video-background-container"
-        style={{ height: heights.viewport }}
+        style={{ height: getScreenHeights(screenHeightsToAnimateOver).viewport }} // Calculate heights based on prop
       >
         {/* {videoSrc === undefined && (
           <div

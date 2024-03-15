@@ -14,6 +14,8 @@ const posterPaths = [
   "/Sequence-02-poster.jpg",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
+const durations = [4, 4, 4, 3];
+
 const useQueryParam = (key: string) => {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(key);
@@ -25,6 +27,7 @@ const App: React.FunctionComponent = () => {
 
   const videoPath = videoPaths[value];
   const posterPath = posterPaths[value];
+  const duration = durations[value];
 
   if (videoPath === undefined) {
     return (
@@ -42,11 +45,20 @@ const App: React.FunctionComponent = () => {
     );
   }
 
+  if (duration === undefined) {
+    return (
+      <div>
+        <h1>Video duration not specified</h1>
+      </div>
+    );
+  }
+
   return (
     <VideoBackground
       aria-label="BLK DNM Product Showcase video"
       posterUrl={posterPath}
       videoUrl={videoPath}
+      duration={duration}
     >
       <img
         alt="BLK DNM Webshop"
