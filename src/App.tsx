@@ -33,7 +33,7 @@ const App: React.FunctionComponent = () => {
   const duration =
     durationParameterFloat === null ||
     Number.isNaN(durationParameterFloat) ||
-    durationParameterFloat <= 0
+    durationParameterFloat <= 1
       ? durations[videoIndex]
       : durationParameterFloat;
 
