@@ -86,8 +86,8 @@ const VideoBackground: FunctionComponent<
         // When this error occurs, the video will not be pre-fetched, and will
         // be loaded on the fly, which means we can still achieve the effect by
         // simply degrading the user experience a bit.
-
         console.warn("Falling back to on-the-fly loading", error);
+
         setVideoSrc(videoUrl);
       }
     })();

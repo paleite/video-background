@@ -4,12 +4,14 @@ const videoPaths = [
   "/Vertical_test_scroll-re.mp4",
   "/vertical_test_scroll_2-re.mp4",
   "/horizontal_test_scroll-re.mp4",
+  "/Sequence-02-re.mp4",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const posterPaths = [
   "/Vertical_test_scroll-poster.jpg",
   "/vertical_test_scroll_2-poster.jpg",
   "/horizontal_test_scroll-poster.jpg",
+  "/Sequence-02-poster.jpg",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const useQueryParam = (key: string) => {
