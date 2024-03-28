@@ -77,4 +77,4 @@ const App: React.FunctionComponent = () => {
   );
 };
 
-export default App;
+export { App };

@@ -1,3 +1,4 @@
+import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { FunctionComponent, PropsWithChildren } from "react";
@@ -40,32 +41,6 @@ const prefetchVideo = async (path: string): Promise<string> => {
   }
 };
 
-const setupScrollAnimation = (
-  video: HTMLVideoElement,
-  screenHeightsToAnimateOver: number,
-) => {
-  const heights = getScreenHeights(screenHeightsToAnimateOver);
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: video,
-      start: "top top",
-      end: `bottom+=${heights.percentage} bottom`,
-      scrub: true,
-      markers: !import.meta.env.PROD,
-    },
-  });
-
-  video.addEventListener("loadedmetadata", () => {
-    tl.to(video, { currentTime: video.duration });
-  });
-
-  // Cleanup function to kill the GSAP timeline on component unmount
-  return () => {
-    tl.kill();
-  };
-};
-
 const VideoBackground: FunctionComponent<
   PropsWithChildren<VideoBackgroundProps>
 > = ({
@@ -101,7 +76,7 @@ const VideoBackground: FunctionComponent<
 
     const video = videoRef.current;
     if (!video) {
-      return () => {};
+      return;
     }
 
     // This is necessary for iOS Safari to show the video on interaction.
@@ -118,9 +93,38 @@ const VideoBackground: FunctionComponent<
         setAutoPlayable(false);
       }
     })();
-
-    return setupScrollAnimation(video, screenHeightsToAnimateOver);
   }, [videoUrl, screenHeightsToAnimateOver]);
+
+  useGSAP(
+    () => {
+      const video = videoRef.current;
+      if (!video) {
+        return;
+      }
+
+      const heights = getScreenHeights(screenHeightsToAnimateOver);
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: video,
+          start: "top top",
+          end: `bottom+=${heights.percentage} bottom`,
+          scrub: true,
+          markers: !import.meta.env.PROD,
+        },
+      });
+
+      video.addEventListener("loadedmetadata", () => {
+        tl.to(video, { currentTime: video.duration });
+      });
+    },
+    {
+      dependencies: [
+        screenHeightsToAnimateOver,
+        // Depend on videoSrc to ensure animation resets if the source changes.
+        videoSrc,
+      ],
+    },
+  );
 
   return (
     <>
