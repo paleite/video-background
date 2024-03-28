@@ -17,12 +17,16 @@ module.exports = {
   parserOptions: {
     project: ["./tsconfig.json", "./tsconfig.node.json"],
   },
-  plugins: ["react-refresh"],
+  plugins: ["simple-import-sort", "react-refresh"],
   rules: {
+    curly: "error",
+    eqeqeq: "error",
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
     ],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
   },
   settings: {
     react: { version: "detect" },
