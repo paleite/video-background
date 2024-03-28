@@ -40,8 +40,11 @@ const prefetchVideo = async (path: string): Promise<string> => {
   }
 };
 
-const setupScrollAnimation = (video: HTMLVideoElement, screenHeightsToAnimateOver: number) => {
-  const heights = getScreenHeights(screenHeightsToAnimateOver); // Calculate heights based on prop
+const setupScrollAnimation = (
+  video: HTMLVideoElement,
+  screenHeightsToAnimateOver: number,
+) => {
+  const heights = getScreenHeights(screenHeightsToAnimateOver);
 
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -65,7 +68,12 @@ const setupScrollAnimation = (video: HTMLVideoElement, screenHeightsToAnimateOve
 
 const VideoBackground: FunctionComponent<
   PropsWithChildren<VideoBackgroundProps>
-> = ({ children, videoUrl, posterUrl, duration: screenHeightsToAnimateOver }) => {
+> = ({
+  children,
+  videoUrl,
+  posterUrl,
+  duration: screenHeightsToAnimateOver,
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
   const [autoPlayable, setAutoPlayable] = useState<boolean | undefined>(
@@ -111,15 +119,17 @@ const VideoBackground: FunctionComponent<
       }
     })();
 
-    return setupScrollAnimation(video, screenHeightsToAnimateOver); // Pass prop to setupScrollAnimation
-  }, [videoUrl, screenHeightsToAnimateOver]); // Add prop to dependency array
+    return setupScrollAnimation(video, screenHeightsToAnimateOver);
+  }, [videoUrl, screenHeightsToAnimateOver]);
 
   return (
     <>
       <div
         aria-busy={videoSrc === undefined}
         data-testid="video-background-container"
-        style={{ height: getScreenHeights(screenHeightsToAnimateOver).viewport }} // Calculate heights based on prop
+        style={{
+          height: getScreenHeights(screenHeightsToAnimateOver).viewport,
+        }}
       >
         {/* {videoSrc === undefined && (
           <div
