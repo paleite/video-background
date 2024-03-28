@@ -4,14 +4,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { FunctionComponent, PropsWithChildren } from "react";
 import { useEffect, useRef, useState } from "react";
 
-/**
- * TODO: This component uses @gsap/react instead of the regular gsap
- * implementation. However, there's currently a bug in this implementation that
- * causes the video's start-frame to be relative to the scroll position at load
- * time, instead of at the top of the video-component. Once that is solved, we
- * can migrate to this component.
- */
-
 type VideoBackgroundProps = {
   videoUrl: string;
   posterUrl: string;
@@ -67,6 +59,8 @@ const VideoBackground: FunctionComponent<
   // from auto-playability, it's a good enough heuristic for our purposes.
   const isBatterySaver = autoPlayable === false;
 
+  const video = videoRef.current;
+
   useEffect(() => {
     (async function setPrefetchedVideoSource() {
       try {
@@ -82,7 +76,6 @@ const VideoBackground: FunctionComponent<
       }
     })();
 
-    const video = videoRef.current;
     if (!video) {
       return;
     }
@@ -101,11 +94,10 @@ const VideoBackground: FunctionComponent<
         setAutoPlayable(false);
       }
     })();
-  }, [videoUrl, screenHeightsToAnimateOver]);
+  }, [videoUrl, screenHeightsToAnimateOver, video]);
 
   useGSAP(
     () => {
-      const video = videoRef.current;
       if (!video) {
         return;
       }
