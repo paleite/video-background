@@ -1,9 +1,9 @@
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 // import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'; // For Next.js
-import type { FunctionComponent, PropsWithChildren } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import type { FunctionComponent, PropsWithChildren } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Videos must be encoded with the following command to avoid becoming choppy.
@@ -59,7 +59,7 @@ const getScreenHeights = (screenHeights: number) => ({
 const fetchVideo = async (path: string) => {
   const response = await fetch(path);
   if (!response.ok) {
-    throw new Error('Network error');
+    throw new Error("Network error");
   }
 
   return response;
@@ -75,15 +75,21 @@ const prefetchVideo = async (path: string): Promise<string> => {
     const response = await fetchVideo(path);
     return await videoToBlobURL(response);
   } catch (error) {
-    console.error('Failed to prefetch video', error);
+    console.error("Failed to prefetch video", error);
     throw error;
   }
 };
 
-const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({ videoUrl, posterUrl, screenHeightsToAnimateOver }) => {
+const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({
+  videoUrl,
+  posterUrl,
+  screenHeightsToAnimateOver,
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
-  const [autoPlayable, setAutoPlayable] = useState<boolean | undefined>(undefined);
+  const [autoPlayable, setAutoPlayable] = useState<boolean | undefined>(
+    undefined,
+  );
 
   // Although technically speaking it's incorrect to infer battery saver mode
   // from auto-playability, it's a good enough heuristic for our purposes.
@@ -100,7 +106,7 @@ const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({ videoUrl, posterUr
         // When this error occurs, the video will not be pre-fetched, and will
         // be loaded on the fly, which means we can still achieve the effect by
         // simply degrading the user experience a bit.
-        console.warn('Falling back to on-the-fly loading', error);
+        console.warn("Falling back to on-the-fly loading", error);
 
         setVideoSrc(videoUrl);
       }
@@ -119,7 +125,7 @@ const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({ videoUrl, posterUr
         setAutoPlayable(true);
       } catch (error) {
         // iOS Safari will fail when in battery saver mode.
-        console.warn('Video playback failed', error);
+        console.warn("Video playback failed", error);
 
         setAutoPlayable(false);
       }
@@ -136,7 +142,7 @@ const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({ videoUrl, posterUr
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: video,
-          start: 'top top',
+          start: "top top",
           end: `bottom+=${heights.percentage} bottom`,
           scrub: true,
           markers: !import.meta.env.PROD,
@@ -144,7 +150,7 @@ const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({ videoUrl, posterUr
         },
       });
 
-      video.addEventListener('loadedmetadata', () => {
+      video.addEventListener("loadedmetadata", () => {
         tl.to(video, { currentTime: video.duration });
       });
     },
@@ -175,7 +181,9 @@ const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({ videoUrl, posterUr
   );
 };
 
-const VideoBackground: FunctionComponent<PropsWithChildren<VideoBackgroundProps>> = ({
+const VideoBackground: FunctionComponent<
+  PropsWithChildren<VideoBackgroundProps>
+> = ({
   children,
   videoUrl,
   posterUrl,
@@ -189,7 +197,7 @@ const VideoBackground: FunctionComponent<PropsWithChildren<VideoBackgroundProps>
           height: getScreenHeights(screenHeightsToAnimateOver).viewport,
         }}
       >
-        {typeof window !== 'undefined' && (
+        {typeof window !== "undefined" && (
           <GsapVideo
             videoUrl={videoUrl}
             posterUrl={posterUrl}
