@@ -5,6 +5,8 @@ const videoPaths = [
   "/vertical_test_scroll_2-re.mp4",
   "/horizontal_test_scroll-re.mp4",
   "/Sequence-02-re.mp4",
+  "/Sequence-02-re-x265.mp4",
+  "/Sequence-02-re-av1.mp4",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const posterPaths = [
@@ -12,9 +14,11 @@ const posterPaths = [
   "/vertical_test_scroll_2-poster.jpg",
   "/horizontal_test_scroll-poster.jpg",
   "/Sequence-02-poster.jpg",
+  "/Sequence-02-poster.jpg",
+  "/Sequence-02-poster.jpg",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
-const durations = [4, 4, 4, 3.5];
+const durations = [4, 4, 4, 3.5, 3.5, 3.5];
 
 const useQueryParam = (key: string) => {
   const urlParams = new URLSearchParams(window.location.search);
