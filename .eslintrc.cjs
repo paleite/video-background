@@ -27,6 +27,8 @@ module.exports = {
     ],
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
+
+    "react/prop-types": "off",
   },
   settings: {
     react: { version: "detect" },
