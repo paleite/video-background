@@ -62,7 +62,7 @@ const VideoBackground: FunctionComponent<
   const video = videoRef.current;
 
   useEffect(() => {
-    (async function setPrefetchedVideoSource() {
+    void (async function setPrefetchedVideoSource() {
       try {
         const blobUrl = await prefetchVideo(videoUrl);
         setVideoSrc(blobUrl);
@@ -81,7 +81,7 @@ const VideoBackground: FunctionComponent<
     }
 
     // This is necessary for iOS Safari to show the video on interaction.
-    (async function checkAutoPlayability() {
+    void (async function checkAutoPlayability() {
       try {
         await video.play();
         video.pause();
