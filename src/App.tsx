@@ -17,7 +17,7 @@ const posterPaths = [
   "/Sequence-02-poster.jpg",
   "/Sequence-02-poster.jpg",
   "/Sequence-02-poster.jpg",
-  "/Sequence-02-large.jpg",
+  "/Sequence-02-poster.jpg",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const durations = [4, 4, 4, 3.5, 3.5, 3.5, 3.5];
