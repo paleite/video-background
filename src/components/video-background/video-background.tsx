@@ -17,9 +17,9 @@ import { useEffect, useRef, useState } from "react";
  * - `-an` - no audio
  * - `-vf scale=376:668` - resize video to 376x668 (based on iPhone 8's logical
  *   resolution, ceiled to closest even number)
- *   - Example: iPhone 8 resolut
- * ion is 750x1334, divided by its native scale-
- *     factor (2) gives 375x667.5, ceiled to closest even number is 376x668.
+ *   - Example: iPhone 8 resolution is 750x1334, divided by its native
+ *     scale-factor (2) gives 375x667.5, ceiled to closest even number
+ *     is 376x668.
  *     @see https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Displays/Displays.html
  * - `-movflags faststart` - Allows for playing back the video before it's
  *   finished downloading.

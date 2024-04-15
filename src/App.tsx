@@ -11,6 +11,7 @@ const videoPaths = [
   "/Sequence-02-re-x265.mp4",
   "/Sequence-02-re-av1.mp4",
   "/Sequence-02-re-large.mp4",
+  "/SCROLLWAY_v1.mp4",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const posterPaths = [
@@ -24,9 +25,10 @@ const posterPaths = [
   "/Sequence-02-poster.jpg",
   "/Sequence-02-poster.jpg",
   "/Sequence-02-poster.jpg",
+  "/SCROLLWAY_v1-poster.jpg",
 ].map((path) => `${import.meta.env.BASE_URL}${path}`);
 
-const durations = [4, 4, 4, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5];
+const durations = [4, 4, 4, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5];
 
 const useQueryParam = (key: string) => {
   const urlParams = new URLSearchParams(window.location.search);
