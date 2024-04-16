@@ -1,5 +1,8 @@
 import { VideoBackground } from "./components";
 
+type PathToMp4 = (`${string}.mp4`);
+type PathToJpg = (`${string}.jpg`);
+
 const videoPaths = ([
   "/Vertical_test_scroll-re.mp4",
   "/vertical_test_scroll_2-re.mp4",
@@ -14,7 +17,7 @@ const videoPaths = ([
   "/SCROLLWAY_v1.mp4",
   "/Speedramp_BLKDNM.mp4",
   "/Scrollway_iphone.mp4"
-] as const satisfies `${string}.mp4`[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
+] as const satisfies PathToMp4[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const posterPaths = ([
   "/Vertical_test_scroll-poster.jpg",
@@ -30,7 +33,7 @@ const posterPaths = ([
   "/SCROLLWAY_v1-poster.jpg",
   "/Speedramp_BLKDNM-poster.jpg",
   "/Scrollway_iphone-poster.jpg"
-] as const satisfies `${string}.jpg`[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
+] as const satisfies PathToJpg[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const durations = [
   // durations
