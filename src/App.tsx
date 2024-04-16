@@ -1,6 +1,6 @@
 import { VideoBackground } from "./components";
 
-const videoPaths = [
+const videoPaths = ([
   "/Vertical_test_scroll-re.mp4",
   "/vertical_test_scroll_2-re.mp4",
   "/horizontal_test_scroll-re.mp4",
@@ -13,10 +13,10 @@ const videoPaths = [
   "/Sequence-02-re-large.mp4",
   "/SCROLLWAY_v1.mp4",
   "/Speedramp_BLKDNM.mp4",
-  "/Scrollway_iphone-poster.jpg"
-].map((path) => `${import.meta.env.BASE_URL}${path}`);
+  "/Scrollway_iphone.mp4"
+] as const satisfies `${string}.mp4`[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
 
-const posterPaths = [
+const posterPaths = ([
   "/Vertical_test_scroll-poster.jpg",
   "/vertical_test_scroll_2-poster.jpg",
   "/horizontal_test_scroll-poster.jpg",
@@ -29,8 +29,8 @@ const posterPaths = [
   "/Sequence-02-poster.jpg",
   "/SCROLLWAY_v1-poster.jpg",
   "/Speedramp_BLKDNM-poster.jpg",
-  "/Scrollway_iphone.mp4"
-].map((path) => `${import.meta.env.BASE_URL}${path}`);
+  "/Scrollway_iphone-poster.jpg"
+] as const satisfies `${string}.jpg`[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
 
 const durations = [
   // durations
