@@ -150,39 +150,39 @@ const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({
         },
       });
 
-      function setupScrollTrigger(
-        divId: string,
-        startPercentage: number,
-        endPercentage: number,
-        isFirstElement: boolean = false,
-      ) {
-        const initialAutoAlpha = isFirstElement ? 1 : 0
+      // function setupScrollTrigger(
+      //   divId: string,
+      //   startPercentage: number,
+      //   endPercentage: number,
+      //   isFirstElement: boolean = false,
+      // ) {
+      //   const initialAutoAlpha = isFirstElement ? 1 : 0
 
-        gsap.fromTo(
-          divId,
-          { autoAlpha: initialAutoAlpha },
-          {
-            autoAlpha: 1,
-            duration: !import.meta.env.PROD ? 0.3 : 0,
-            scrollTrigger: {
-              trigger: video,
-              start: () =>
-                `${screenHeightsToAnimateOver * startPercentage * 100}%`,
-              end: () => `${screenHeightsToAnimateOver * endPercentage * 100}%`,
-              toggleActions: "play reverse play reverse",
-              markers: !import.meta.env.PROD,
-              scrub: false,
-              onLeaveBack: () =>
-                gsap.to(divId, { autoAlpha: initialAutoAlpha }),
-              onLeave: () => gsap.to(divId, { autoAlpha: 0 }),
-            },
-          },
-        );
-      }
+      //   gsap.fromTo(
+      //     divId,
+      //     { autoAlpha: initialAutoAlpha },
+      //     {
+      //       autoAlpha: 1,
+      //       duration: !import.meta.env.PROD ? 0.3 : 0,
+      //       scrollTrigger: {
+      //         trigger: video,
+      //         start: () =>
+      //           `${screenHeightsToAnimateOver * startPercentage * 100}%`,
+      //         end: () => `${screenHeightsToAnimateOver * endPercentage * 100}%`,
+      //         toggleActions: "play reverse play reverse",
+      //         markers: !import.meta.env.PROD,
+      //         scrub: false,
+      //         onLeaveBack: () =>
+      //           gsap.to(divId, { autoAlpha: initialAutoAlpha }),
+      //         onLeave: () => gsap.to(divId, { autoAlpha: 0 }),
+      //       },
+      //     },
+      //   );
+      // }
 
-      setupScrollTrigger("#div1", 0, 0.33, true);
-      setupScrollTrigger("#div2", 0.33, 0.66);
-      setupScrollTrigger("#div3", 0.66, 1);
+      // setupScrollTrigger("#div1", 0, 0.33, true);
+      // setupScrollTrigger("#div2", 0.33, 0.66);
+      // setupScrollTrigger("#div3", 0.66, 1);
 
       video.addEventListener("loadedmetadata", () => {
         tl.to(video, { currentTime: video.duration });
@@ -238,15 +238,15 @@ const VideoBackground: FunctionComponent<
             screenHeightsToAnimateOver={screenHeightsToAnimateOver}
           />
         )}
-        <div className="opacity-1 fixed bg-red-500 p-12" id="div1">
-          div1
+        {/* <div className="flex opacity-1 fixed bg-red-500 inset-0" id="div1">
+          <a className="w-full h-full flex justify-center items-center" href="https://www.blkdnm.com/product/women/outerwear/coat-78-black-fox-wool">#div1</a>
         </div>
-        <div className="fixed bg-slate-500 p-12 opacity-0" id="div2">
-          div2
+        <div className="flex fixed opacity-0 bg-slate-500 inset-0" id="div2">
+          <a className="w-full h-full flex justify-center items-center" href="https://www.blkdnm.com/product/men/tailoring/blazer-73-black-brit-stripe">#div2</a>
         </div>
-        <div className="fixed bg-green-500 p-12 opacity-0" id="div3">
-          div3
-        </div>
+        <div className="flex fixed opacity-0 bg-green-500 inset-0" id="div3">
+          <a className="w-full h-full flex justify-center items-center" href="https://www.blkdnm.com/product/men/shirts/shirt-15-pale-blue">#div3</a>
+        </div> */}
       </div>
       <div className="relative">{children}</div>
     </>
