@@ -82,10 +82,10 @@ const CanvasFrames: React.FunctionComponent<
           height: "5000px",
         }}
       >
-        <div className="fixed flex h-full w-full bg-black">
+        <div className="fixed flex h-screen w-screen bg-black">
           <canvas
             ref={canvasRef}
-            className="h-full w-full bg-black object-scale-down"
+            className="h-screen w-screen bg-black object-scale-down"
           />
         </div>
       </div>
