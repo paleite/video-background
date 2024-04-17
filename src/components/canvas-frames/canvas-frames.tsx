@@ -2,12 +2,14 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PropsWithChildren, useEffect, useRef } from "react";
 
-const frameCount = 147;
+const videoWidth = 1080;
+const videoHeight = 1920;
+const frameCount = 176;
 const offset = 1;
 
 const images = Array.from({ length: frameCount }, (_, i) => i + offset).map(
   (path) => {
-    const framePath = `${import.meta.env.BASE_URL}airpods/${path.toString().padStart(4, "0")}.jpg`;
+    const framePath = `${import.meta.env.BASE_URL}frames/Phone version, Scrollway/${path.toString().padStart(4, "0")}.jpg`;
     const img = new Image();
     img.src = framePath;
     return img;
@@ -38,8 +40,8 @@ const CanvasFrames: React.FunctionComponent<
       return;
     }
 
-    canvas.width = 1158;
-    canvas.height = 770;
+    canvas.width = videoWidth;
+    canvas.height = videoHeight;
 
     const airpods = { frame: 0 };
 
