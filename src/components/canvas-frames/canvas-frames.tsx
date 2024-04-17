@@ -2,8 +2,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PropsWithChildren, useEffect, useRef } from "react";
 
-const videoWidth = 1080;
-const videoHeight = 1920;
+const videoWidth = 708;
+const videoHeight = 1259;
 const frameCount = 176;
 const offset = 1;
 
