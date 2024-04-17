@@ -54,6 +54,7 @@ const CanvasFrames: React.FunctionComponent<
     canvas.height = height;
 
     const render = () => {
+      console.log("Progress: " + 100 * frames.frame / (frameCount - 1));
       const imageToDraw = images[frames.frame];
       if (!context || !canvas || !imageToDraw) {
         return;
@@ -82,13 +83,72 @@ const CanvasFrames: React.FunctionComponent<
     if (images[0] !== undefined) {
       images[0].onload = render;
     }
-  }, [frameCount, heights.percentage, images, width, height]);
+
+    function setupScrollTrigger(
+      divId: string,
+      startPercentage: number,
+      endPercentage: number,
+      isFirstElement: boolean = false,
+    ) {
+      const initialAutoAlpha = isFirstElement ? 1 : 0;
+
+      gsap.fromTo(
+        divId,
+        { autoAlpha: initialAutoAlpha },
+        {
+          autoAlpha: 1,
+          duration: !import.meta.env.PROD ? 0.3 : 0,
+          scrollTrigger: {
+            trigger: canvas,
+            start: () => `${duration * startPercentage * 100}%`,
+            end: () => `${duration * endPercentage * 100}%`,
+            toggleActions: "play reverse play reverse",
+            markers: !import.meta.env.PROD,
+            scrub: false,
+            onLeaveBack: () => gsap.to(divId, { autoAlpha: initialAutoAlpha }),
+            onLeave: () => gsap.to(divId, { autoAlpha: 0 }),
+          },
+        },
+      );
+    }
+
+    setupScrollTrigger("#div1", 0, 0.1, true);
+    setupScrollTrigger("#div2", 0.25, 0.46);
+    setupScrollTrigger("#div3", 0.54, 1);
+  }, [duration, frameCount, heights.percentage, images, width, height]);
 
   return (
     <>
       <div data-testid="canvas-container" style={{ height: heights.viewport }}>
         <div className="fixed flex h-screen w-screen">
           <canvas ref={canvasRef} className="h-screen w-screen object-cover" />
+        </div>
+        <div className="opacity-1 fixed inset-0 flex" id="div1">
+          {(true || !import.meta.env.PROD) && (
+            <div className="absolute bg-red-500/90">ACTIVE LINK: SHIRT 16 PALE BLUE</div>
+          )}
+          <a
+            className="flex h-full w-full items-center justify-center"
+            href="https://www.blkdnm.com/product/women/blouses/shirt-16-vintage-blue"
+          />
+        </div>
+        <div className="fixed inset-0 flex opacity-0" id="div2">
+          {(true || !import.meta.env.PROD) && (
+            <div className="absolute bg-slate-500/90">ACTIVE LINK: DENIM JACKET 75 VINTAGE BLUE STUDS</div>
+          )}
+          <a
+            className="flex h-full w-full items-center justify-center"
+            href="https://www.blkdnm.com/product/men/denim/denim-jacket-75-vintage-blue"
+          />
+        </div>
+        <div className="fixed inset-0 flex opacity-0" id="div3">
+          {(true || !import.meta.env.PROD) && (
+            <div className="absolute bg-green-500/90">ACTIVE LINK: LEATHER JACKET 70 LIGHT BROWN</div>
+          )}
+          <a
+            className="flex h-full w-full items-center justify-center"
+            href="https://www.blkdnm.com/product/women/leather/leather-jacket-70-light-brown"
+          />
         </div>
       </div>
       <div className="relative">{children}</div>
