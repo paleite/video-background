@@ -97,7 +97,7 @@ const CanvasFrames: React.FunctionComponent<
         { autoAlpha: initialAutoAlpha },
         {
           autoAlpha: 1,
-          duration: !import.meta.env.PROD ? 0.3 : 0,
+          duration: 0.1,
           scrollTrigger: {
             trigger: canvas,
             start: () => `${duration * startPercentage * 100}%`,
