@@ -27,7 +27,7 @@ type CanvasFramesProps = {
   // videoUrl: string;
   // posterUrl: string;
   // TODO: Make this required instead of optional
-  duration?: number;
+  duration: number;
 };
 
 const CanvasFrames: React.FunctionComponent<

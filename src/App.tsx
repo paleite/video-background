@@ -111,7 +111,7 @@ const App: React.FunctionComponent = () => {
         aria-label="BLK DNM Product Showcase video"
         // posterUrl={posterPath}
         // videoUrl={videoPath}
-        // duration={duration}
+        duration={duration}
       >
         <img
           alt="BLK DNM Webshop"
