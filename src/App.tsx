@@ -109,9 +109,9 @@ const App: React.FunctionComponent = () => {
     <>
       <CanvasFrames
         aria-label="BLK DNM Product Showcase video"
-        posterUrl={posterPath}
-        videoUrl={videoPath}
-        duration={duration}
+        // posterUrl={posterPath}
+        // videoUrl={videoPath}
+        // duration={duration}
       >
         <img
           alt="BLK DNM Webshop"

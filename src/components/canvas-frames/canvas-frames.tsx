@@ -3,26 +3,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PropsWithChildren, useEffect, useRef } from "react";
 
 const frameCount = 147;
-
 const offset = 1;
-const framePaths = Array.from({ length: frameCount }, (_, i) => i + offset).map(
-  (path) =>
-    `${import.meta.env.BASE_URL}airpods/${path.toString().padStart(4, "0")}.jpg`,
+
+const images = Array.from({ length: frameCount }, (_, i) => i + offset).map(
+  (path) => {
+    const framePath = `${import.meta.env.BASE_URL}airpods/${path.toString().padStart(4, "0")}.jpg`;
+    const img = new Image();
+    img.src = framePath;
+    return img;
+  },
 );
 
-const getImages = () => {
-  const images: HTMLImageElement[] = [];
-
-  for (let i = 0; i < frameCount; i++) {
-    const img = new Image();
-    img.src = framePaths[i];
-    images.push(img);
-  }
-  return images;
-};
-
-
-const images = getImages();
 gsap.registerPlugin(ScrollTrigger);
 
 type CanvasFramesProps = {
