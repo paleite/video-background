@@ -1,43 +1,45 @@
 import { VideoBackground } from "./components";
 
-type PathToMp4 = (`${string}.mp4`);
-type PathToJpg = (`${string}.jpg`);
+type PathToMp4 = `/${string}.mp4`;
+type PathToJpg = `/${string}.jpg`;
 
-const videoPaths = ([
-  "/Vertical_test_scroll-re.mp4",
-  "/vertical_test_scroll_2-re.mp4",
-  "/horizontal_test_scroll-re.mp4",
-  "/Sequence-02-re.mp4",
-  "/BLK_DNM_Test_100p01819079.mp4",
-  "/BLK_DNM_Test_100p01815476.mp4",
-  "/BLK_DNM_Test_100p01814190.mp4",
-  "/Sequence-02-re-x265.mp4",
-  "/Sequence-02-re-av1.mp4",
-  "/Sequence-02-re-large.mp4",
-  "/SCROLLWAY_v1.mp4",
-  "/Speedramp_BLKDNM.mp4",
-  "/Scrollway_iphone.mp4"
-] as const satisfies PathToMp4[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
+const videoPaths = (
+  [
+    "/Vertical_test_scroll-re.mp4",
+    "/vertical_test_scroll_2-re.mp4",
+    "/horizontal_test_scroll-re.mp4",
+    "/Sequence-02-re.mp4",
+    "/BLK_DNM_Test_100p01819079.mp4",
+    "/BLK_DNM_Test_100p01815476.mp4",
+    "/BLK_DNM_Test_100p01814190.mp4",
+    "/Sequence-02-re-x265.mp4",
+    "/Sequence-02-re-av1.mp4",
+    "/Sequence-02-re-large.mp4",
+    "/SCROLLWAY_v1.mp4",
+    "/Speedramp_BLKDNM.mp4",
+    "/Scrollway_iphone.mp4",
+  ] as const satisfies PathToMp4[]
+).map((path) => `${import.meta.env.BASE_URL}${path}`);
 
-const posterPaths = ([
-  "/Vertical_test_scroll-poster.jpg",
-  "/vertical_test_scroll_2-poster.jpg",
-  "/horizontal_test_scroll-poster.jpg",
-  "/Sequence-02-poster.jpg",
-  "/BLK_DNM_Test_100p01819079-poster.jpg",
-  "/BLK_DNM_Test_100p01815476-poster.jpg",
-  "/BLK_DNM_Test_100p01814190-poster.jpg",
-  "/Sequence-02-poster.jpg",
-  "/Sequence-02-poster.jpg",
-  "/Sequence-02-poster.jpg",
-  "/SCROLLWAY_v1-poster.jpg",
-  "/Speedramp_BLKDNM-poster.jpg",
-  "/Scrollway_iphone-poster.jpg"
-] as const satisfies PathToJpg[]).map((path) => `${import.meta.env.BASE_URL}${path}`);
+const posterPaths = (
+  [
+    "/Vertical_test_scroll-poster.jpg",
+    "/vertical_test_scroll_2-poster.jpg",
+    "/horizontal_test_scroll-poster.jpg",
+    "/Sequence-02-poster.jpg",
+    "/BLK_DNM_Test_100p01819079-poster.jpg",
+    "/BLK_DNM_Test_100p01815476-poster.jpg",
+    "/BLK_DNM_Test_100p01814190-poster.jpg",
+    "/Sequence-02-poster.jpg",
+    "/Sequence-02-poster.jpg",
+    "/Sequence-02-poster.jpg",
+    "/SCROLLWAY_v1-poster.jpg",
+    "/Speedramp_BLKDNM-poster.jpg",
+    "/Scrollway_iphone-poster.jpg",
+  ] as const satisfies PathToJpg[]
+).map((path) => `${import.meta.env.BASE_URL}${path}`);
 
-const durations = [
-  // durations
-  4, 4, 4, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5];
+const durations = [4, 4, 4, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5];
 
 const useQueryParam = (key: string) => {
   const urlParams = new URLSearchParams(window.location.search);
