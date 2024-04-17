@@ -76,16 +76,16 @@ const CanvasFrames: React.FunctionComponent<
   return (
     <>
       <div
-        className="flex bg-slate-500/50"
+        className="flex bg-black"
         data-testid="canvas-container"
         style={{
           height: "5000px",
         }}
       >
-        <div className="fixed flex h-full w-full bg-amber-500/50">
+        <div className="fixed flex h-full w-full bg-black">
           <canvas
             ref={canvasRef}
-            className="h-full w-full bg-red-500/30 object-cover"
+            className="h-full w-full bg-black object-scale-down"
           />
         </div>
       </div>
