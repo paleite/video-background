@@ -87,7 +87,7 @@ const CanvasFrames: React.FunctionComponent<
         <div className="fixed flex h-screen w-screen bg-black">
           <canvas
             ref={canvasRef}
-            className="h-screen w-screen bg-black object-scale-down"
+            className="h-screen w-screen bg-black object-cover"
           />
         </div>
       </div>
