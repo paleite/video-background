@@ -1,16 +1,39 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { PropsWithChildren, useEffect, useRef } from "react";
+
+const frameCount = 147;
 
 const offset = 1;
-const framePaths = Array.from({ length: 147 }, (_, i) => i + offset).map(
+const framePaths = Array.from({ length: frameCount }, (_, i) => i + offset).map(
   (path) =>
     `${import.meta.env.BASE_URL}airpods/${path.toString().padStart(4, "0")}.jpg`,
 );
 
+const getImages = () => {
+  const images: HTMLImageElement[] = [];
+
+  for (let i = 0; i < frameCount; i++) {
+    const img = new Image();
+    img.src = framePaths[i];
+    images.push(img);
+  }
+  return images;
+};
+
+
+const images = getImages();
 gsap.registerPlugin(ScrollTrigger);
 
-const CanvasFrames: React.FC = () => {
+type CanvasFramesProps = {
+  // videoUrl: string;
+  // posterUrl: string;
+  // duration: number;
+};
+
+const CanvasFrames: React.FunctionComponent<
+  PropsWithChildren<CanvasFramesProps>
+> = ({ children }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -27,16 +50,7 @@ const CanvasFrames: React.FC = () => {
     canvas.width = 1158;
     canvas.height = 770;
 
-    const frameCount = 147;
-
-    const images: HTMLImageElement[] = [];
     const airpods = { frame: 0 };
-
-    for (let i = 0; i < frameCount; i++) {
-      const img = new Image();
-      img.src = framePaths[i];
-      images.push(img);
-    }
 
     gsap.to(airpods, {
       frame: frameCount - 1,
@@ -53,21 +67,39 @@ const CanvasFrames: React.FC = () => {
       },
     });
 
-    images[0].onload = render;
+    if (images[0] !== undefined) {
+      images[0].onload = render;
+    }
 
     function render() {
+      const imageToDraw = images[airpods.frame];
+      if (!context || !canvas || !imageToDraw) {
+        return;
+      }
+
       context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(images[airpods.frame], 0, 0);
+      context.drawImage(imageToDraw, 0, 0);
     }
   }, []);
 
   return (
-    <div data-testid="canvas-container" style={{ height: "5000px" }}>
-      <canvas
-        ref={canvasRef}
-        className="fixed left-1/2 top-1/2 max-h-[100vh] max-w-[100vw] -translate-x-1/2 -translate-y-1/2"
-      />
-    </div>
+    <>
+      <div
+        className="flex bg-slate-500/50"
+        data-testid="canvas-container"
+        style={{
+          height: "5000px",
+        }}
+      >
+        <div className="fixed flex h-full w-full bg-amber-500/50">
+          <canvas
+            ref={canvasRef}
+            className="h-full w-full bg-red-500/30 object-cover"
+          />
+        </div>
+      </div>
+      <div className="relative">{children}</div>
+    </>
   );
 };
 
