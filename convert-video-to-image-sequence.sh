@@ -14,7 +14,7 @@ echo "$(tput bold)$(basename $DIR) $(basename "${BASH_SOURCE[0]%.*}")$(tput sgr0
 
 if [ -z "${1:-}" ]; then
   echo "No argument supplied. Usage: $0 <path-to-video-file>"
-  exit 1;
+  exit 1
 fi
 
 VIDEO_PATH=$(realpath "$1")
@@ -30,56 +30,23 @@ OUTPUT_DIR="${GIT_REPO_ROOT}/public/frames/$VIDEO_PATH_WITHOUT_EXTENSION"
 # echo "OUTPUT_DIR: $OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-# ffmpeg -i "$VIDEO_PATH" -start_number 1 "$OUTPUT_DIR/%04d.png"
+# echo "Extracting frames from ${VIDEO_PATH}..."
+ffmpeg -loglevel quiet -stats -i "$VIDEO_PATH" -start_number 1 "$OUTPUT_DIR/%04d.png"
 
-echo ""
-echo "Convert from png to jpg"
+# echo "Preparing JPG files..."
 
 for IMAGE_INPUT_PATH in "$OUTPUT_DIR"/*.png; do
   if [[ -f "$IMAGE_INPUT_PATH" ]]; then
-IMAGE_INPUT_PATH_WITHOUT_EXTENSION=$(basename "${IMAGE_INPUT_PATH%.*}")
-    # Extract the folder name from the directory path
-    folder_name=$(basename "$(dirname "$IMAGE_INPUT_PATH")")
+    IMAGE_INPUT_PATH_WITHOUT_EXTENSION=$(basename "${IMAGE_INPUT_PATH%.*}")
+    IMAGE_OUTPUT_PATH="$OUTPUT_DIR/$IMAGE_INPUT_PATH_WITHOUT_EXTENSION.jpg"
 
-    # Build the path for the output JPG file
-    output_file="$OUTPUT_DIR/$folder_name.jpg"
+    convert -resize '891660@>' "$IMAGE_INPUT_PATH" "$IMAGE_OUTPUT_PATH"
 
-echo "IMAGE_INPUT_PATH_WITHOUT_EXTENSION: $IMAGE_INPUT_PATH_WITHOUT_EXTENSION"
-echo "IMAGE_INPUT_PATH: $IMAGE_INPUT_PATH"
-echo "OUTPUT_DIR+IMAGE_INPUT_PATH_WITHOUT_EXTENSION: $OUTPUT_DIR/$IMAGE_INPUT_PATH_WITHOUT_EXTENSION"
-IMAGE_OUTPUT_PATH="$OUTPUT_DIR/$IMAGE_INPUT_PATH_WITHOUT_EXTENSION.jpg"
-echo "IMAGE_OUTPUT_PATH: $IMAGE_OUTPUT_PATH"
-convert "$IMAGE_INPUT_PATH" "$IMAGE_OUTPUT_PATH"
-    # Resize the square images and convert to JPG
-    # cjpeg -progressive -optimize -sample 1x1 -quality 85 "${IMAGE_INPUT_PATH}"
-    # cjpeg -progressive -sample 1x1 -quality 85 -outfile encoded_image.jpg "${IMAGE_INPUT_PATH}"
-    # echo convert "$IMAGE_INPUT_PATH" -gravity center -crop 58.6%x78.125%+0+0 - #  | convert - "$output_file"
+    rm "$IMAGE_INPUT_PATH"
   fi
 done
 
+# echo "Optimizing JPG files..."
+jpegoptim --quiet --strip-all --all-progressive --size=50 "$OUTPUT_DIR"/*.jpg
 
-# open  "$OUTPUT_DIR"
-
-# exit 1
-# ffmpeg -i "$VIDEO_PATH"  -frames:v 1 -q:v 2 ./public/"$VIDEO_PATH_WITHOUT_EXTENSION"-poster.jpg ;
-
-# ffmpeg -i "$VIDEO_PATH" -an -vf scale=376:668 -movflags faststart -vcodec libx264 -g 1 -pix_fmt yuv420p ./public/"$VIDEO_PATH_WITHOUT_EXTENSION".mp4;
-
-
-###################
-
-
-
-# # Iterate through each subdirectory in the search directory
-# for IMAGE_INPUT_PATH in "$search_dir"/*/*.0001.png; do
-#   if [[ -f "$IMAGE_INPUT_PATH" ]]; then
-#     # Extract the folder name from the directory path
-#     folder_name=$(basename "$(dirname "$IMAGE_INPUT_PATH")")
-
-#     # Build the path for the output JPG file
-#     output_file="$OUTPUT_DIR/$folder_name.jpg"
-
-#     # Resize the square images and convert to JPG
-#     convert "$IMAGE_INPUT_PATH" -gravity center -crop 58.6%x78.125%+0+0 - | convert - "$output_file"
-#   fi
-# done
+# echo "Done"
