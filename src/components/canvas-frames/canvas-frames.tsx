@@ -21,7 +21,6 @@ const getScreenHeights = (screenHeights: number) => ({
   viewport: `${Math.max(screenHeights * 100, 0)}vh`,
 });
 
-
 gsap.registerPlugin(ScrollTrigger);
 
 type CanvasFramesProps = {
@@ -55,14 +54,12 @@ const CanvasFrames: React.FunctionComponent<
     const airpods = { frame: 0 };
 
     gsap.to(airpods, {
-      // trigger: canvasRef,
       frame: frameCount - 1,
       snap: "frame",
       ease: "none",
-      trigger: canvasRef,
       scrollTrigger: {
-        trigger: canvasRef.current,
-        scrub: 0.1,
+        trigger: canvas,
+        scrub: true,
         start: "top top",
         end: `bottom+=${heights.percentage} bottom`,
         markers: !import.meta.env.PROD,
@@ -77,7 +74,6 @@ const CanvasFrames: React.FunctionComponent<
     }
 
     function render() {
-      console.log("rendering frame", airpods.frame);
       const imageToDraw = images[airpods.frame];
       if (!context || !canvas || !imageToDraw) {
         return;
@@ -90,20 +86,9 @@ const CanvasFrames: React.FunctionComponent<
 
   return (
     <>
-      <div
-        // className="flex bg-slate-500/50 overflow-hidden"
-        data-testid="canvas-container"
-        style={{
-          // height: "calc(" + (3.5 * 100 / frameCount) + " * 100vh)",
-          height: heights.viewport,
-          // height: "1050px",
-        }}
-      >
-        <div className="fixed flex h-full w-full bg-amber-500/50">
-          <canvas
-            ref={canvasRef}
-            className="h-screen w-screen bg-red-500/30 object-cover"
-          />
+      <div data-testid="canvas-container" style={{ height: heights.viewport }}>
+        <div className="fixed flex h-screen w-screen">
+          <canvas ref={canvasRef} className="h-screen w-screen object-cover" />
         </div>
       </div>
       <div className="relative">{children}</div>
