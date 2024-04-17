@@ -1,4 +1,5 @@
 import { VideoBackground } from "./components";
+import { CanvasFrames } from "./components";
 
 type PathToMp4 = `/${string}.mp4`;
 type PathToJpg = `/${string}.jpg`;
@@ -47,6 +48,9 @@ const useQueryParam = (key: string) => {
 };
 
 const App: React.FunctionComponent = () => {
+  const mode: "video" | "canvas" =
+    useQueryParam("mode") === "canvas" ? "canvas" : "video";
+  parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
   const videoIndex: number =
     parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
   const durationParameter = useQueryParam("duration");
@@ -86,19 +90,36 @@ const App: React.FunctionComponent = () => {
     );
   }
 
-  return (
-    <VideoBackground
-      aria-label="BLK DNM Product Showcase video"
-      posterUrl={posterPath}
-      videoUrl={videoPath}
-      duration={duration}
-    >
-      <img
-        alt="BLK DNM Webshop"
-        className="w-full"
-        src={`${import.meta.env.BASE_URL}below-video.png`}
-      />
-    </VideoBackground>
+  return mode === "video" ? (
+    <>
+      <VideoBackground
+        aria-label="BLK DNM Product Showcase video"
+        posterUrl={posterPath}
+        videoUrl={videoPath}
+        duration={duration}
+      >
+        <img
+          alt="BLK DNM Webshop"
+          className="w-full"
+          src={`${import.meta.env.BASE_URL}below-video.png`}
+        />
+      </VideoBackground>
+    </>
+  ) : (
+    <>
+      <CanvasFrames
+        aria-label="BLK DNM Product Showcase video"
+        posterUrl={posterPath}
+        videoUrl={videoPath}
+        duration={duration}
+      >
+        <img
+          alt="BLK DNM Webshop"
+          className="w-full"
+          src={`${import.meta.env.BASE_URL}below-video.png`}
+        />
+      </CanvasFrames>
+    </>
   );
 };
 
