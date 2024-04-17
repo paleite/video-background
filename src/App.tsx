@@ -109,9 +109,11 @@ const App: React.FunctionComponent = () => {
     <>
       <CanvasFrames
         aria-label="BLK DNM Product Showcase video"
-        // posterUrl={posterPath}
-        // videoUrl={videoPath}
         duration={duration}
+        frameCount={176}
+        prefix={`${import.meta.env.BASE_URL}frames/Phone version, Scrollway`}
+        width={708}
+        height={1259}
       >
         <img
           alt="BLK DNM Webshop"

@@ -1,20 +1,9 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PropsWithChildren, useEffect, useRef } from "react";
+import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 
-const videoWidth = 708;
-const videoHeight = 1259;
-const frameCount = 176;
 const offset = 1;
-
-const images = Array.from({ length: frameCount }, (_, i) => i + offset).map(
-  (path) => {
-    const framePath = `${import.meta.env.BASE_URL}frames/Phone version, Scrollway/${path.toString().padStart(4, "0")}.jpg`;
-    const img = new Image();
-    img.src = framePath;
-    return img;
-  },
-);
+const frames = { frame: 0 };
 
 const getScreenHeights = (screenHeights: number) => ({
   percentage: `${Math.max((screenHeights - 1) * 100, 0)}%`,
@@ -24,17 +13,30 @@ const getScreenHeights = (screenHeights: number) => ({
 gsap.registerPlugin(ScrollTrigger);
 
 type CanvasFramesProps = {
-  // videoUrl: string;
-  // posterUrl: string;
-  // TODO: Make this required instead of optional
+  width: number;
+  height: number;
+  frameCount: number;
   duration: number;
+  prefix: string;
 };
+
+const getImages = (frameCount: number, prefix: string) =>
+  Array.from({ length: frameCount }, (_, i) => i + offset).map((path) => {
+    const framePath = `${prefix}/${path.toString().padStart(4, "0")}.jpg`;
+    const img = new Image();
+    img.src = framePath;
+    return img;
+  });
 
 const CanvasFrames: React.FunctionComponent<
   PropsWithChildren<CanvasFramesProps>
-> = ({ children, duration = 3.5 }) => {
-  const heights = getScreenHeights(duration);
+> = ({ children, duration, frameCount, prefix, width, height }) => {
+  const images = useMemo(
+    () => getImages(frameCount, prefix),
+    [frameCount, prefix],
+  );
 
+  const heights = getScreenHeights(duration);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -48,12 +50,20 @@ const CanvasFrames: React.FunctionComponent<
       return;
     }
 
-    canvas.width = videoWidth;
-    canvas.height = videoHeight;
+    canvas.width = width;
+    canvas.height = height;
 
-    const airpods = { frame: 0 };
+    const render = () => {
+      const imageToDraw = images[frames.frame];
+      if (!context || !canvas || !imageToDraw) {
+        return;
+      }
 
-    gsap.to(airpods, {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(imageToDraw, 0, 0);
+    };
+
+    gsap.to(frames, {
       frame: frameCount - 1,
       snap: "frame",
       ease: "none",
@@ -72,17 +82,7 @@ const CanvasFrames: React.FunctionComponent<
     if (images[0] !== undefined) {
       images[0].onload = render;
     }
-
-    function render() {
-      const imageToDraw = images[airpods.frame];
-      if (!context || !canvas || !imageToDraw) {
-        return;
-      }
-
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(imageToDraw, 0, 0);
-    }
-  }, [heights.percentage]);
+  }, [frameCount, heights.percentage, images, width, height]);
 
   return (
     <>
