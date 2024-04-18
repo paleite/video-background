@@ -2,7 +2,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 
-const offset = 1;
+const offset = 0;
 const frames = { frame: 0 };
 
 const getScreenHeights = (screenHeights: number) => ({
@@ -22,7 +22,7 @@ type CanvasFramesProps = {
 
 const getImages = (frameCount: number, prefix: string) =>
   Array.from({ length: frameCount }, (_, i) => i + offset).map((path) => {
-    const framePath = `${prefix}/${path.toString().padStart(4, "0")}.jpg`;
+    const framePath = `${prefix}${path.toString().padStart(4, "0")}.jpg`;
     const img = new Image();
     img.src = framePath;
     return img;
@@ -85,7 +85,7 @@ const CanvasFrames: React.FunctionComponent<
     }
 
     function setupScrollTrigger(
-      divId: string,
+      divId: gsap.TweenTarget,
       startPercentage: number,
       endPercentage: number,
       isFirstElement: boolean = false,

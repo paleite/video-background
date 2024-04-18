@@ -40,6 +40,29 @@ const posterPaths = (
   ] as const satisfies PathToJpg[]
 ).map((path) => `${import.meta.env.BASE_URL}${path}`);
 
+const canvases = [
+  {
+    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-sd-lq/Phone Scrollway_0`,
+    width: 708,
+    height: 1259,
+  },
+  {
+    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-hd-lq/Phone Scrollway_0`,
+    width: 1080,
+    height: 1920,
+  },
+  {
+    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-sd-hq/Phone Scrollway_0`,
+    width: 708,
+    height: 1259,
+  },
+  {
+    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-hd-hq/Phone Scrollway_0`,
+    width: 1080,
+    height: 1920,
+  },
+];
+
 const durations = [4, 4, 4, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5];
 
 const useQueryParam = (key: string) => {
@@ -50,9 +73,10 @@ const useQueryParam = (key: string) => {
 const App: React.FunctionComponent = () => {
   const mode: "video" | "canvas" =
     useQueryParam("mode") === "canvas" ? "canvas" : "video";
-  parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
   const videoIndex: number =
     parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
+  const canvasIndex: number =
+    parseInt(useQueryParam("canvas") ?? "0") % canvases.length;
   const durationParameter = useQueryParam("duration");
   const durationParameterFloat: number | null =
     durationParameter !== null ? parseFloat(durationParameter) : null;
@@ -90,6 +114,16 @@ const App: React.FunctionComponent = () => {
     );
   }
 
+  const currentCanvas = canvases[canvasIndex];
+
+  if (currentCanvas === undefined) {
+    return (
+      <div>
+        <h1>Canvas not found</h1>
+      </div>
+    );
+  }
+
   return mode === "video" ? (
     <>
       <VideoBackground
@@ -111,9 +145,9 @@ const App: React.FunctionComponent = () => {
         aria-label="BLK DNM Product Showcase video"
         duration={duration}
         frameCount={176}
-        prefix={`${import.meta.env.BASE_URL}frames/Phone version, Scrollway`}
-        width={708}
-        height={1259}
+        prefix={currentCanvas.prefix}
+        width={currentCanvas.width}
+        height={currentCanvas.height}
       >
         <img
           alt="BLK DNM Webshop"
