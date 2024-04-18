@@ -76,7 +76,7 @@ const App: React.FunctionComponent = () => {
   const videoIndex: number =
     parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
   const canvasIndex: number =
-    parseInt(useQueryParam("canvas") ?? "0") % canvases.length;
+    parseInt(useQueryParam("canvas") ?? "2") % canvases.length;
   const durationParameter = useQueryParam("duration");
   const durationParameterFloat: number | null =
     durationParameter !== null ? parseFloat(durationParameter) : null;
