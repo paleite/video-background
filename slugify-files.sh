@@ -6,67 +6,41 @@ set -o nounset
 readonly DEBUG=${DEBUG:-false}
 [[ "${DEBUG}" == 'true' ]] && set -o xtrace
 
-
-
 # Validate input
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <relative-folder-path>"
-    exit 1
+  echo "Usage: $0 <relative-folder-path>"
+  exit 1
 fi
 
-input_dir="$1"
-
-# Function to slugify directory paths without affecting slashes or leading dots
-slugify_path() {
-    # Process the path, maintaining initial dots and correctly formatting the slashes
-    echo "$1" | awk -F/ -v OFS=/ '{
-        if ($1 == ".") {
-            leading_dot=1;
-            $1="";
-        }
+# Slugification function for paths and files
+slugify() {
+  echo "$1" | awk -F/ -v OFS=/ '{
         for (i=1; i<=NF; i++) {
-            gsub(/[^a-zA-Z0-9-]/, "-", $i);
-            gsub(/--*/, "-", $i);
-            gsub(/^-|-$/, "", $i);
-            $i = tolower($i);
-        }
-        if (leading_dot) print "." $0; else print $0;
-    }'
-}
-
-slugify_file() {
-    # Handle filenames separately to manage extensions without modifying the period
-    echo "$1" | awk -F. '{
-        if (NF>1) {
-            ext = $NF;  # Save the extension
-            NF--;
-            name = $0;
+            # Handle filenames and extensions
+            split($i, parts, ".");
+            name = parts[1];
+            ext = (length(parts) > 1) ? "." tolower(parts[2]) : "";
             gsub(/[^a-zA-Z0-9-]/, "-", name);
             gsub(/--*/, "-", name);
             gsub(/^-|-$/, "", name);
-            print tolower(name) "." tolower(ext);
-        } else {
-            print tolower($1);
+            $i = tolower(name) ext;
         }
+        print;
     }'
 }
 
-export -f slugify_path
-export -f slugify_file
+export -f slugify
 
-# Find all files in the specified directory, slugify the path and filename, and copy
-find "$input_dir" -type f | while IFS= read -r file; do
-    directory=$(dirname "$file")
-    filename=$(basename "$file")
-    new_directory=$(slugify_path "$directory")
-    new_filename=$(slugify_file "$filename")
-    new_path="$new_directory/$new_filename"
+# Process all files, slugify paths and names, and copy them to new locations if
+# they're not the same
+find "$1" -type f | while IFS= read -r FILE; do
+  NEW_PATH=$(slugify "$FILE")
+  if [ -e "$NEW_PATH" ]; then
+    echo "Skipping existing '$NEW_PATH'"
+    continue
+  fi
 
-    Ensure the target directory exists
-    mkdir -p "$new_directory"
-
-    # Copy the file to the new path
-    cp "$file" "$new_path"
-
-    echo "Copied '$file' to '$new_path'"
+  mkdir -p "$(dirname "$NEW_PATH")"
+  cp "$FILE" "$NEW_PATH"
+  echo "Copied '$FILE' to '$NEW_PATH'"
 done
