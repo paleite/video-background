@@ -156,7 +156,7 @@ const GsapVideo: React.FunctionComponent<GsapVideoProps> = ({
       //   endPercentage: number,
       //   isFirstElement: boolean = false,
       // ) {
-      //   const initialAutoAlpha = isFirstElement ? 1 : 0
+      //   const initialAutoAlpha = isFirstElement ? 1 : 0;
 
       //   gsap.fromTo(
       //     divId,
@@ -238,14 +238,29 @@ const VideoBackground: FunctionComponent<
             screenHeightsToAnimateOver={screenHeightsToAnimateOver}
           />
         )}
-        {/* <div className="flex opacity-1 fixed bg-red-500 inset-0" id="div1">
-          <a className="w-full h-full flex justify-center items-center" href="https://www.blkdnm.com/product/women/outerwear/coat-78-black-fox-wool">#div1</a>
+        {/* <div className="opacity-1 fixed inset-0 flex bg-red-500" id="div1">
+          <a
+            className="flex h-full w-full items-center justify-center"
+            href="https://www.blkdnm.com/product/women/outerwear/coat-78-black-fox-wool"
+          >
+            #div1
+          </a>
         </div>
-        <div className="flex fixed opacity-0 bg-slate-500 inset-0" id="div2">
-          <a className="w-full h-full flex justify-center items-center" href="https://www.blkdnm.com/product/men/tailoring/blazer-73-black-brit-stripe">#div2</a>
+        <div className="fixed inset-0 flex bg-slate-500 opacity-0" id="div2">
+          <a
+            className="flex h-full w-full items-center justify-center"
+            href="https://www.blkdnm.com/product/men/tailoring/blazer-73-black-brit-stripe"
+          >
+            #div2
+          </a>
         </div>
-        <div className="flex fixed opacity-0 bg-green-500 inset-0" id="div3">
-          <a className="w-full h-full flex justify-center items-center" href="https://www.blkdnm.com/product/men/shirts/shirt-15-pale-blue">#div3</a>
+        <div className="fixed inset-0 flex bg-green-500 opacity-0" id="div3">
+          <a
+            className="flex h-full w-full items-center justify-center"
+            href="https://www.blkdnm.com/product/men/shirts/shirt-15-pale-blue"
+          >
+            #div3
+          </a>
         </div> */}
       </div>
       <div className="relative">{children}</div>
