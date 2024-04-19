@@ -1,3 +1,4 @@
+import { useMediaQuery } from "usehooks-ts";
 import { VideoBackground } from "./components";
 import { CanvasFrames } from "./components";
 
@@ -42,24 +43,52 @@ const posterPaths = (
 
 const canvases = [
   {
-    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-sd-lq/Phone Scrollway_0`,
-    width: 708,
-    height: 1259,
+    portrait: {
+      prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-sd-lq/Phone Scrollway_0`,
+      width: 708,
+      height: 1259,
+    },
+    landscape: {
+      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      width: 1259,
+      height: 708,
+    },
   },
   {
-    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-hd-lq/Phone Scrollway_0`,
-    width: 1080,
-    height: 1920,
+    portrait: {
+      prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-hd-lq/Phone Scrollway_0`,
+      width: 1080,
+      height: 1920,
+    },
+    landscape: {
+      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      width: 1920,
+      height: 1080,
+    },
   },
   {
-    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-sd-hq/Phone Scrollway_0`,
-    width: 708,
-    height: 1259,
+    portrait: {
+      prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-sd-hq/Phone Scrollway_0`,
+      width: 708,
+      height: 1259,
+    },
+    landscape: {
+      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      width: 1259,
+      height: 708,
+    },
   },
   {
-    prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-hd-hq/Phone Scrollway_0`,
-    width: 1080,
-    height: 1920,
+    portrait: {
+      prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-hd-hq/Phone Scrollway_0`,
+      width: 1080,
+      height: 1920,
+    },
+    landscape: {
+      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      width: 1920,
+      height: 1080,
+    },
   },
 ];
 
@@ -71,8 +100,10 @@ const useQueryParam = (key: string) => {
 };
 
 const App: React.FunctionComponent = () => {
+  const isMobile = useMediaQuery("(orientation: portrait)");
+
   const mode: "video" | "canvas" =
-    useQueryParam("mode") === "canvas" ? "canvas" : "video";
+    useQueryParam("mode") === "video" ? "video" : "canvas";
   const videoIndex: number =
     parseInt(useQueryParam("video") ?? "0") % videoPaths.length;
   const canvasIndex: number =
@@ -139,15 +170,32 @@ const App: React.FunctionComponent = () => {
         />
       </VideoBackground>
     </>
+  ) : isMobile ? (
+    <>
+      <CanvasFrames
+        aria-label="BLK DNM Product Showcase video"
+        duration={duration}
+        frameCount={176}
+        prefix={currentCanvas.portrait.prefix}
+        width={currentCanvas.portrait.width}
+        height={currentCanvas.portrait.height}
+      >
+        <img
+          alt="BLK DNM Webshop"
+          className="w-full"
+          src={`${import.meta.env.BASE_URL}below-video.png`}
+        />
+      </CanvasFrames>
+    </>
   ) : (
     <>
       <CanvasFrames
         aria-label="BLK DNM Product Showcase video"
         duration={duration}
         frameCount={176}
-        prefix={currentCanvas.prefix}
-        width={currentCanvas.width}
-        height={currentCanvas.height}
+        prefix={currentCanvas.landscape.prefix}
+        width={currentCanvas.landscape.width}
+        height={currentCanvas.landscape.height}
       >
         <img
           alt="BLK DNM Webshop"
