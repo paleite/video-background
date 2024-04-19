@@ -1,6 +1,6 @@
 import { useMediaQuery } from "usehooks-ts";
-import { VideoBackground } from "./components";
-import { CanvasFrames } from "./components";
+
+import { CanvasFrames,VideoBackground  } from "./components";
 
 type PathToMp4 = `/${string}.mp4`;
 type PathToJpg = `/${string}.jpg`;
