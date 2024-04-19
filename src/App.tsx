@@ -49,7 +49,7 @@ const canvases = [
       height: 1259,
     },
     landscape: {
-      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      prefix: `${import.meta.env.BASE_URL}frames/desktop-scrollway/desktop-scrollway-0`,
       width: 1259,
       height: 708,
     },
@@ -61,19 +61,19 @@ const canvases = [
       height: 1920,
     },
     landscape: {
-      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      prefix: `${import.meta.env.BASE_URL}frames/desktop-scrollway/desktop-scrollway-0`,
       width: 1920,
       height: 1080,
     },
   },
   {
     portrait: {
-      prefix: `${import.meta.env.BASE_URL}frames/Phone Scrollway-sd-hq/Phone Scrollway_0`,
+      prefix: `${import.meta.env.BASE_URL}frames/phone-scrollway/phone-scrollway-0`,
       width: 708,
       height: 1259,
     },
     landscape: {
-      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      prefix: `${import.meta.env.BASE_URL}frames/desktop-scrollway/desktop-scrollway-0`,
       width: 1259,
       height: 708,
     },
@@ -85,7 +85,7 @@ const canvases = [
       height: 1920,
     },
     landscape: {
-      prefix: `${import.meta.env.BASE_URL}frames/Desktop Scrollway/Desktop Scrollway_0`,
+      prefix: `${import.meta.env.BASE_URL}frames/desktop-scrollway/desktop-scrollway-0`,
       width: 1920,
       height: 1080,
     },
@@ -100,8 +100,10 @@ const useQueryParam = (key: string) => {
 };
 
 const App: React.FunctionComponent = () => {
-  const isMobile = useMediaQuery("(orientation: portrait)");
-
+  // Disable landscape mode until the timings are fixed
+  const showLandscapeMode = !import.meta.env.PROD
+  const showPortraitMode =
+    useMediaQuery("(orientation: portrait)") || showLandscapeMode === false;
   const mode: "video" | "canvas" =
     useQueryParam("mode") === "video" ? "video" : "canvas";
   const videoIndex: number =
@@ -170,39 +172,40 @@ const App: React.FunctionComponent = () => {
         />
       </VideoBackground>
     </>
-  ) : isMobile ? (
-    <>
-      <CanvasFrames
-        aria-label="BLK DNM Product Showcase video"
-        duration={duration}
-        frameCount={176}
-        prefix={currentCanvas.portrait.prefix}
-        width={currentCanvas.portrait.width}
-        height={currentCanvas.portrait.height}
-      >
-        <img
-          alt="BLK DNM Webshop"
-          className="w-full"
-          src={`${import.meta.env.BASE_URL}below-video.png`}
-        />
-      </CanvasFrames>
-    </>
   ) : (
     <>
-      <CanvasFrames
-        aria-label="BLK DNM Product Showcase video"
-        duration={duration}
-        frameCount={176}
-        prefix={currentCanvas.landscape.prefix}
-        width={currentCanvas.landscape.width}
-        height={currentCanvas.landscape.height}
-      >
-        <img
-          alt="BLK DNM Webshop"
-          className="w-full"
-          src={`${import.meta.env.BASE_URL}below-video.png`}
-        />
-      </CanvasFrames>
+      {showPortraitMode && (
+        <CanvasFrames
+          aria-label="BLK DNM Product Showcase video"
+          duration={duration}
+          frameCount={176}
+          prefix={currentCanvas.portrait.prefix}
+          width={currentCanvas.portrait.width}
+          height={currentCanvas.portrait.height}
+        >
+          <img
+            alt="BLK DNM Webshop"
+            className="w-full"
+            src={`${import.meta.env.BASE_URL}below-video.png`}
+          />
+        </CanvasFrames>
+      )}
+      {showLandscapeMode && (
+        <CanvasFrames
+          aria-label="BLK DNM Product Showcase video"
+          duration={duration}
+          frameCount={176}
+          prefix={currentCanvas.landscape.prefix}
+          width={currentCanvas.landscape.width}
+          height={currentCanvas.landscape.height}
+        >
+          <img
+            alt="BLK DNM Webshop"
+            className="w-full"
+            src={`${import.meta.env.BASE_URL}below-video.png`}
+          />
+        </CanvasFrames>
+      )}
     </>
   );
 };
