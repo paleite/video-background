@@ -1,6 +1,6 @@
 import { useMediaQuery } from "usehooks-ts";
 
-import { CanvasFrames,VideoBackground  } from "./components";
+import { CanvasFrames, VideoBackground } from "./components";
 
 type PathToMp4 = `/${string}.mp4`;
 type PathToJpg = `/${string}.jpg`;
@@ -101,7 +101,7 @@ const useQueryParam = (key: string) => {
 
 const App: React.FunctionComponent = () => {
   // Disable landscape mode until the timings are fixed
-  const showLandscapeMode = !import.meta.env.PROD
+  const showLandscapeMode = !import.meta.env.PROD;
   const showPortraitMode =
     useMediaQuery("(orientation: portrait)") || showLandscapeMode === false;
   const mode: "video" | "canvas" =

@@ -54,7 +54,7 @@ const CanvasFrames: React.FunctionComponent<
     canvas.height = height;
 
     const render = () => {
-      console.log("Progress: " + 100 * frames.frame / (frameCount - 1));
+      console.log("Progress: " + (100 * frames.frame) / (frameCount - 1));
       const imageToDraw = images[frames.frame];
       if (!context || !canvas || !imageToDraw) {
         return;
@@ -125,7 +125,9 @@ const CanvasFrames: React.FunctionComponent<
         </div>
         <div className="opacity-1 fixed inset-0 flex" id="div1">
           {(true || !import.meta.env.PROD) && (
-            <div className="absolute bg-red-500/90">ACTIVE LINK: SHIRT 16 PALE BLUE</div>
+            <div className="absolute bg-red-500/90">
+              ACTIVE LINK: SHIRT 16 PALE BLUE
+            </div>
           )}
           <a
             className="flex h-full w-full items-center justify-center"
@@ -134,7 +136,9 @@ const CanvasFrames: React.FunctionComponent<
         </div>
         <div className="fixed inset-0 flex opacity-0" id="div2">
           {(true || !import.meta.env.PROD) && (
-            <div className="absolute bg-slate-500/90">ACTIVE LINK: DENIM JACKET 75 VINTAGE BLUE STUDS</div>
+            <div className="absolute bg-slate-500/90">
+              ACTIVE LINK: DENIM JACKET 75 VINTAGE BLUE STUDS
+            </div>
           )}
           <a
             className="flex h-full w-full items-center justify-center"
@@ -143,7 +147,9 @@ const CanvasFrames: React.FunctionComponent<
         </div>
         <div className="fixed inset-0 flex opacity-0" id="div3">
           {(true || !import.meta.env.PROD) && (
-            <div className="absolute bg-green-500/90">ACTIVE LINK: LEATHER JACKET 70 LIGHT BROWN</div>
+            <div className="absolute bg-green-500/90">
+              ACTIVE LINK: LEATHER JACKET 70 LIGHT BROWN
+            </div>
           )}
           <a
             className="flex h-full w-full items-center justify-center"
